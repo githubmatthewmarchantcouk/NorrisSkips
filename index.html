@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Skip Hire &amp; Waste Management – Norris</title>
+  <title>8x8 Norris Skips Demo</title>
   <style>
     /* ── Reset & Base ─────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1057,9 +1057,7 @@
   <div class="sticky-btn" onclick="window.scrollTo({top:300,behavior:'smooth'})">
     <span class="sticky-icon">↩️</span>Return a Skip
   </div>
-  <div class="sticky-btn" onclick="alert('Live chat coming soon!')">
-    <span class="sticky-icon">💬</span>Live Chat
-  </div>
+  <div id="__8x8-chat-button-container-script_1493918123696e2dfbe10540.79726509"></div>
 </div>
 
 <!-- ── Scripts ── -->
@@ -1095,6 +1093,53 @@
   // Add padding to body so sticky bar doesn't cover footer
   document.body.style.paddingBottom = '54px';
 </script>
+
+  <!-- 8x8 Live Chat -->
+  <script type="text/javascript">
+  (function(c, f, ef){
+      var typeofC = Object.prototype.toString.call(c);
+      var props = (typeofC === '[object Object]' && c) || {};
+      var cb = f || (typeofC === '[object Function]' && c);
+      var config = {
+          scriptUuid: "script_1493918123696e2dfbe10540.79726509",
+          tenant: "dWtzYWxlc2VuYWJsZW1lbnQ0NzgwMQ",
+          channelName: "NorrisChat",
+          channelUuid: "QR-zynnnR3i3YVPYqOrmkA",
+          domain: "https://vcc-eu5.8x8.com",
+          buttonContainerId: "__8x8-chat-button-container-script_1493918123696e2dfbe10540.79726509",
+          align: "right",
+      };
+      var url = new URL("https://cloud8-cc-geo.8x8.com/vcc-chat-channels/public/webchat/discovery");
+      var params = { domain: config.domain, tenant: config.tenant, channelUuid: config.channelUuid };
+      url.search = new URLSearchParams(params).toString();
+      fetch(url)
+          .then(response => response.json())
+          .then(data => config.domain = !data.domain ? config.domain : data.domain)
+          .catch(error => console.warn('Failed to retrieve override domain, will continue using ', config.domain, error))
+          .finally(() => loadChat());
+      function loadChat() {
+          var se = document.createElement("script");
+          se.type = "text/javascript";
+          se.async = true;
+          se.src = props.loaderURL || (config.domain + "/CHAT/common/js/chatv3.js");
+          Object.keys(config).forEach(function (k) { se.dataset[k] = config[k] });
+          Object.keys(props).forEach(function (k) { se.dataset[k] = props[k] });
+          function handleInitEvent(e) {
+              var initFn = e.detail.init;
+              initFn(config, cb);
+              se.removeEventListener('init', handleInitEvent)
+          }
+          function handleErrorEvent(e) {
+              ef && ef(e);
+              se.removeEventListener('customerror', handleErrorEvent);
+          }
+          se.addEventListener('init', handleInitEvent);
+          se.addEventListener('customerror', handleErrorEvent);
+          var os = document.getElementsByTagName("script")[0];
+          os.parentNode.insertBefore(se, os);
+      }
+  })();
+  </script>
 
 </body>
 </html>
