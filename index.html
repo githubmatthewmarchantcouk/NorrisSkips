@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>8x8 Norris Skips Demo</title>
+  <title>Skip Hire &amp; Waste Management – Norris</title>
   <style>
     /* ── Reset & Base ─────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -434,6 +434,91 @@
     .sticky-btn .sticky-icon { font-size: 18px; }
     .sticky-btn.primary { background: var(--orange); }
     .sticky-btn.primary:hover { background: var(--orange-dark); }
+
+    /* ── Callback Form Popup ────────────────────────────── */
+    #callback-form-popup {
+      display: none; position: fixed; bottom: 54px; right: 0; z-index: 9999;
+      width: 340px; background: var(--green-dark);
+      border-radius: 12px 0 0 12px;
+      box-shadow: -6px 6px 40px rgba(0,0,0,.35);
+      font-family: inherit; overflow: hidden;
+      animation: cbSlideIn .35s cubic-bezier(.34,1.56,.64,1);
+    }
+    #callback-form-popup.open { display: block; }
+    @keyframes cbSlideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to   { transform: translateX(0);   opacity: 1; }
+    }
+    .cbf-header {
+      background: #0f2118; padding: 18px 20px 16px;
+      border-bottom: 3px solid var(--orange);
+      display: flex; align-items: flex-start; justify-content: space-between;
+    }
+    .cbf-eyebrow {
+      font-size: 10px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--yellow); margin-bottom: 4px;
+    }
+    .cbf-title { font-size: 18px; font-weight: 700; color: #fff; line-height: 1.2; }
+    .cbf-title em { font-style: normal; color: var(--orange); }
+    .cbf-close {
+      background: rgba(255,255,255,.1); border: none; color: #ccc;
+      width: 28px; height: 28px; border-radius: 6px; font-size: 15px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-left: 10px; transition: background .2s;
+    }
+    .cbf-close:hover { background: rgba(255,255,255,.2); color: #fff; }
+    .cbf-body { padding: 18px 20px 6px; }
+    .cbf-field { margin-bottom: 13px; }
+    .cbf-label {
+      display: block; font-size: 11px; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase;
+      color: rgba(255,255,255,.55); margin-bottom: 5px;
+    }
+    .cbf-input {
+      width: 100%; padding: 10px 13px;
+      background: rgba(255,255,255,.08);
+      border: 1.5px solid rgba(255,255,255,.15);
+      border-radius: var(--radius); color: #fff;
+      font-size: 14px; font-family: inherit;
+      transition: border-color .2s, background .2s; outline: none;
+    }
+    .cbf-input::placeholder { color: rgba(255,255,255,.3); }
+    .cbf-input:focus { border-color: var(--orange); background: rgba(232,88,26,.08); }
+    select.cbf-input option { background: var(--green-dark); color: #fff; }
+    .cbf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .cbf-footer { padding: 12px 20px 18px; display: flex; flex-direction: column; gap: 8px; }
+    .cbf-submit {
+      background: var(--orange); color: #fff; border: none;
+      border-radius: var(--radius); padding: 12px;
+      font-size: 14px; font-weight: 700; font-family: inherit;
+      cursor: pointer; width: 100%; transition: background .2s;
+    }
+    .cbf-submit:hover { background: var(--orange-dark); }
+    .cbf-cancel {
+      background: transparent; color: rgba(255,255,255,.5);
+      border: 1.5px solid rgba(255,255,255,.15); border-radius: var(--radius);
+      padding: 10px; font-size: 13px; font-weight: 600; font-family: inherit;
+      cursor: pointer; width: 100%; transition: border-color .2s, color .2s;
+    }
+    .cbf-cancel:hover { border-color: rgba(255,255,255,.35); color: #fff; }
+    #cbf-success { display: none; padding: 28px 24px; text-align: center; }
+    #cbf-success.show { display: block; }
+    .cbf-success-icon {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: rgba(245,197,24,.12); border: 2px solid var(--yellow);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; margin: 0 auto 16px;
+    }
+    .cbf-success-title { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+    .cbf-success-title em { font-style: normal; color: var(--orange); }
+    .cbf-success-desc { font-size: 13px; color: rgba(255,255,255,.6); line-height: 1.6; margin-bottom: 20px; }
+    .cbf-success-close {
+      background: var(--orange); color: #fff; border: none;
+      border-radius: var(--radius); padding: 10px 24px;
+      font-size: 13px; font-weight: 700; font-family: inherit;
+      cursor: pointer; transition: background .2s;
+    }
+    .cbf-success-close:hover { background: var(--orange-dark); }
 
     /* ── Accessibility Skip Link ────────────────────────── */
     .skip-link {
@@ -1049,10 +1134,73 @@
   </div>
 </footer>
 
+<!-- ── Callback Form Popup ── -->
+<div id="callback-form-popup">
+  <div class="cbf-header">
+    <div>
+      <div class="cbf-eyebrow">Norris · Free Callback</div>
+      <div class="cbf-title">We'll call <em>you back.</em></div>
+    </div>
+    <button class="cbf-close" onclick="closeCallbackForm()" aria-label="Close">✕</button>
+  </div>
+  <form name="WebCallBack" action="https://vcc-eu6.8x8.com/SC/webcallback.php" method="get"
+        oninput="(function(f){ f.extTransactionData.value = '[Name|' + f.fname.value + ' ' + f.lname.value + '][Location|' + f.elements.location.value + '][Reason|' + f.reason.value + ']'; })(document.WebCallBack)">
+    <input type="hidden" name="extTransactionData"/>
+    <input type="hidden" name="tenant"         value="eightx8uklimited01"/>
+    <input type="hidden" name="token"          value="edd0316d07bb7b60909c935725c384528124e7341c5a7b8d8cc46e965ae8600f"/>
+    <input type="hidden" name="channel_number" value="442046151183"/>
+    <input type="hidden" name="callback_type"  value="2"/>
+    <input type="hidden" name="queue_id"       value="532"/>
+    <div class="cbf-body">
+      <div class="cbf-row">
+        <div class="cbf-field">
+          <label class="cbf-label" for="cb-fname">First name</label>
+          <input class="cbf-input" type="text" id="cb-fname" name="fname" placeholder="Jane"/>
+        </div>
+        <div class="cbf-field">
+          <label class="cbf-label" for="cb-lname">Last name</label>
+          <input class="cbf-input" type="text" id="cb-lname" name="lname" placeholder="Smith"/>
+        </div>
+      </div>
+      <div class="cbf-field">
+        <label class="cbf-label" for="cb-location">Location / Postcode</label>
+        <input class="cbf-input" type="text" id="cb-location" name="location" placeholder="BR5 2NB"/>
+      </div>
+      <div class="cbf-field">
+        <label class="cbf-label" for="cb-reason">Reason for call</label>
+        <select class="cbf-input" id="cb-reason" name="reason">
+          <option value="Skip Hire">Skip Hire</option>
+          <option value="Waste Services">Waste Services</option>
+          <option value="Trade &amp; Commercial">Trade &amp; Commercial</option>
+          <option value="Permit Query">Permit Query</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="cbf-field">
+        <label class="cbf-label" for="cb-phone">Phone number</label>
+        <input class="cbf-input" type="tel" id="cb-phone" name="phone" placeholder="+44 20 1234 5678"/>
+      </div>
+    </div>
+    <div class="cbf-footer">
+      <button type="submit" class="cbf-submit">📞 Call Me Back</button>
+      <button type="button" class="cbf-cancel" onclick="closeCallbackForm()">Cancel</button>
+    </div>
+  </form>
+  <div id="cbf-success">
+    <div class="cbf-success-icon">✓</div>
+    <div class="cbf-success-title">We'll call you <em>back.</em></div>
+    <p class="cbf-success-desc">Your callback request has been received. An agent will call you on the number provided shortly.</p>
+    <button class="cbf-success-close" onclick="closeCallbackForm()">Done</button>
+  </div>
+</div>
+
 <!-- ── Sticky Bottom Bar ── -->
 <div class="sticky-bar">
   <div class="sticky-btn primary" onclick="window.scrollTo({top:300,behavior:'smooth'})">
     <span class="sticky-icon">📅</span>Book a Skip
+  </div>
+  <div class="sticky-btn" onclick="openCallbackForm(event)" style="background:#0f2118;" title="Request a Callback">
+    <span class="sticky-icon">📞</span>Call Me Back
   </div>
   <div class="sticky-btn" onclick="window.scrollTo({top:300,behavior:'smooth'})">
     <span class="sticky-icon">↩️</span>Return a Skip
@@ -1092,6 +1240,35 @@
 
   // Add padding to body so sticky bar doesn't cover footer
   document.body.style.paddingBottom = '54px';
+
+  // Callback form
+  function openCallbackForm(e) {
+    if (e) e.stopPropagation();
+    document.querySelector('#callback-form-popup form').style.display = '';
+    document.getElementById('cbf-success').classList.remove('show');
+    document.getElementById('callback-form-popup').classList.add('open');
+  }
+  function closeCallbackForm() {
+    document.getElementById('callback-form-popup').classList.remove('open');
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    var form = document.querySelector('#callback-form-popup form');
+    if (form) {
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var f = document.WebCallBack;
+        f.extTransactionData.value =
+          '[Name|' + f.fname.value + ' ' + f.lname.value + ']' +
+          '[Location|' + f.elements['location'].value + ']' +
+          '[Reason|' + f.reason.value + ']';
+        var params = new URLSearchParams(new FormData(this));
+        fetch(this.action + '?' + params.toString(), { method: 'GET', mode: 'no-cors' })
+          .catch(function () {});
+        this.style.display = 'none';
+        document.getElementById('cbf-success').classList.add('show');
+      });
+    }
+  });
 </script>
 
   <!-- 8x8 Live Chat -->
